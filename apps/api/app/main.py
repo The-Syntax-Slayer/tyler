@@ -13,6 +13,33 @@ from fastapi import FastAPI, Query, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from starlette.types import ASGIApp, Receive, Scope, Send
+
+
+class StripApiPrefixMiddleware:
+    """Tolerate a leading /api segment on the request path.
+
+    Locally the Vite proxy strips /api before forwarding, so requests arrive
+    as /health, /decision, ... On Vercel the function may instead observe the
+    full public path (/api/health) depending on how routing reaches it.
+    Stripping a leading /api (when present) makes both spellings route to
+    the same handlers. Never touches any other path.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] == "http":
+            path = scope.get("path", "")
+            if path == "/api":
+                scope["path"] = "/"
+                scope["raw_path"] = b"/"
+            elif path.startswith("/api/"):
+                stripped = path[len("/api"):]
+                scope["path"] = stripped
+                scope["raw_path"] = stripped.encode("utf-8")
+        await self.app(scope, receive, send)
 
 from app.cache import (
     load_fuelhh,
@@ -55,6 +82,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+# Strip a leading /api segment when the platform forwards the public path.
+app.add_middleware(StripApiPrefixMiddleware)
 
 # CORS configuration: Allow Vite dev server locally; in production same-origin needs no CORS.
 app.add_middleware(
