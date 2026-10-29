@@ -7,6 +7,7 @@ FastAPI TestClient suite covering 04-API-SPEC.md contracts:
 - GET /vintages (happy path, 422 on missing date)
 - GET /accuracy (happy path shape, non-empty perVintage and perHorizonHours)
 - 503 error contract when cache directory is empty or missing
+- /api-prefixed spellings (Vercel routing) behave identically to bare paths
 """
 
 from pathlib import Path
@@ -193,3 +194,25 @@ def test_cache_miss_returns_503(monkeypatch):
 
     # Restore cache
     clear_cache()
+
+
+def test_api_prefix_health():
+    """Regression: the /api-prefixed spelling served by Vercel routing works."""
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    assert response.json()["cacheLoaded"] is True
+
+
+def test_api_prefix_decision_matches_bare_path():
+    """Regression: /api/decision returns the identical payload as /decision."""
+    bare = client.get("/decision?deliveryDate=2026-01-01&cutoff=2025-12-31T17:00:00Z")
+    prefixed = client.get("/api/decision?deliveryDate=2026-01-01&cutoff=2025-12-31T17:00:00Z")
+    assert prefixed.status_code == 200
+    assert prefixed.json() == bare.json()
+
+
+def test_api_prefix_cutoff_rule_enforced():
+    """Regression: the /api spelling enforces the same cutoff rule (422 when too early)."""
+    response = client.get("/api/decision?deliveryDate=2026-01-01&cutoff=2020-01-01T00:00:00Z")
+    assert response.status_code == 422
+    assert "detail" in response.json()

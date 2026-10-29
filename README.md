@@ -5,6 +5,8 @@ the latest wind-generation forecasts that were knowable when day-ahead decisions
 had to be made, and lets the team evaluate forecast accuracy quantitatively —
 for January 2026 delivery, using Elexon data only.
 
+**Live demo:** https://tyler-the-syntax-slayers-projects.vercel.app/
+
 - **Decision view:** pick a delivery day and a D-1 gate-closure cutoff
   (11:00 / 17:00 / 23:00 UTC). The app serves the latest WINDFOR vintage
   published at or before that cutoff, next to FUELHH actuals.

@@ -92,7 +92,7 @@ export default function App() {
                 <div
                   className={`flex items-center gap-1.5 rounded-control border px-2.5 py-2 text-xs font-semibold ${
                     health.cacheLoaded
-                      ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                       : 'border-rose-200 bg-rose-50 text-rose-600'
                   }`}
                   title={
@@ -136,13 +136,20 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main view */}
+      {/* Main view — all views stay mounted so switching tabs preserves
+          each view's date, cutoff, slider and scroll state. */}
       <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <div key={activeTab} className="animate-rise">
-          {activeTab === 'decision' && <DecisionView />}
-          {activeTab === 'accuracy' && <AccuracyView />}
-          {activeTab === 'explorer' && <VintageExplorer />}
-          {activeTab === 'about' && <AboutView />}
+        <div className={activeTab === 'decision' ? undefined : 'hidden'}>
+          <DecisionView />
+        </div>
+        <div className={activeTab === 'accuracy' ? undefined : 'hidden'}>
+          <AccuracyView />
+        </div>
+        <div className={activeTab === 'explorer' ? undefined : 'hidden'}>
+          <VintageExplorer />
+        </div>
+        <div className={activeTab === 'about' ? undefined : 'hidden'}>
+          <AboutView />
         </div>
       </main>
 
