@@ -11,68 +11,71 @@ export function MetricSummary({ metrics }: MetricSummaryProps) {
   const isPositiveBias = biasVal !== null && biasVal > 0;
   const isNegativeBias = biasVal !== null && biasVal < 0;
 
+  const cells = [
+    {
+      label: 'Mean Absolute Error',
+      title: 'MAE = mean(|Forecast - Actual|)',
+      value: formatMW(metrics.maeMW),
+      valueClass: 'text-ink',
+      note: 'Average deviation magnitude',
+      accent: 'bg-forecast',
+    },
+    {
+      label: 'Root Mean Sq Error',
+      title: 'RMSE = sqrt(mean((Forecast - Actual)^2))',
+      value: formatMW(metrics.rmseMW),
+      valueClass: 'text-ink',
+      note: 'Penalises large deviations',
+      accent: 'bg-actual',
+    },
+    {
+      label: 'Mean Bias Error',
+      title: 'Bias = mean(Forecast - Actual). Positive = Over-forecast',
+      value: formatResidualMW(metrics.biasMW),
+      valueClass: isPositiveBias
+        ? 'text-residual-pos'
+        : isNegativeBias
+          ? 'text-residual-neg'
+          : 'text-ink',
+      note: isPositiveBias ? 'Over-forecast bias' : isNegativeBias ? 'Under-forecast bias' : 'Zero bias',
+      accent: isPositiveBias ? 'bg-residual-pos' : isNegativeBias ? 'bg-residual-neg' : 'bg-line-strong',
+    },
+  ];
+
   return (
-    <section aria-label="Quantitative Error Metrics" className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-line bg-surface p-5 rounded-card border border-line shadow-card">
-      {/* MAE */}
-      <div className="p-3">
-        <div className="flex items-center justify-between text-xs text-ink-muted mb-1">
-          <span className="font-semibold uppercase tracking-wider text-[11px] text-ink-muted">Mean Absolute Error</span>
-          <span title="MAE = mean(|Forecast - Actual|)" className="cursor-help">
-            <HelpCircle className="w-3.5 h-3.5 text-ink-muted" />
-          </span>
-        </div>
-        <div className="text-2xl font-bold text-ink font-mono tabular-nums">
-          {formatMW(metrics.maeMW)}
-        </div>
-        <div className="text-xs text-ink-muted mt-1">Average deviation magnitude</div>
-      </div>
-
-      {/* RMSE */}
-      <div className="p-3">
-        <div className="flex items-center justify-between text-xs text-ink-muted mb-1">
-          <span className="font-semibold uppercase tracking-wider text-[11px] text-ink-muted">Root Mean Sq Error</span>
-          <span title="RMSE = sqrt(mean((Forecast - Actual)^2))" className="cursor-help">
-            <HelpCircle className="w-3.5 h-3.5 text-ink-muted" />
-          </span>
-        </div>
-        <div className="text-2xl font-bold text-ink font-mono tabular-nums">
-          {formatMW(metrics.rmseMW)}
-        </div>
-        <div className="text-xs text-ink-muted mt-1">Penalises large deviations</div>
-      </div>
-
-      {/* Bias */}
-      <div className="p-3">
-        <div className="flex items-center justify-between text-xs text-ink-muted mb-1">
-          <span className="font-semibold uppercase tracking-wider text-[11px] text-ink-muted">Mean Bias Error</span>
-          <span title="Bias = mean(Forecast - Actual). Positive = Over-forecast" className="cursor-help">
-            <HelpCircle className="w-3.5 h-3.5 text-ink-muted" />
-          </span>
-        </div>
+    <section aria-label="Quantitative Error Metrics" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {cells.map((cell) => (
         <div
-          className={`text-2xl font-bold font-mono tabular-nums ${
-            isPositiveBias ? 'text-residual-pos' : isNegativeBias ? 'text-residual-neg' : 'text-ink'
-          }`}
+          key={cell.label}
+          className="edge-glow relative overflow-hidden rounded-card border border-line bg-surface p-4 shadow-card sm:p-5"
         >
-          {formatResidualMW(metrics.biasMW)}
+          <span className={`absolute inset-x-4 top-0 h-px ${cell.accent} opacity-70`} aria-hidden="true" />
+          <div className="mb-2 flex items-center justify-between gap-2 text-ink-muted">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">{cell.label}</span>
+            <span title={cell.title} className="cursor-help shrink-0">
+              <HelpCircle className="h-3.5 w-3.5 text-ink-faint" />
+            </span>
+          </div>
+          <div className={`font-mono text-[28px] font-semibold leading-none tabular-nums sm:text-[32px] ${cell.valueClass}`}>
+            {cell.value}
+          </div>
+          <div className="mt-2 text-xs text-ink-muted">{cell.note}</div>
         </div>
-        <div className="text-xs text-ink-muted mt-1">
-          {isPositiveBias ? 'Over-forecast bias' : isNegativeBias ? 'Under-forecast bias' : 'Zero bias'}
-        </div>
-      </div>
+      ))}
 
       {/* Observations */}
-      <div className="p-3">
-        <div className="flex items-center justify-between text-xs text-ink-muted mb-1">
-          <span className="font-semibold uppercase tracking-wider text-[11px] text-ink-muted">Evaluated Pairs</span>
-          <span title="Matching hourly forecast and actual records" className="cursor-help">
-            <HelpCircle className="w-3.5 h-3.5 text-ink-muted" />
+      <div className="edge-glow relative overflow-hidden rounded-card border border-line bg-surface p-4 shadow-card sm:p-5">
+        <span className="absolute inset-x-4 top-0 h-px bg-volt opacity-70" aria-hidden="true" />
+        <div className="mb-2 flex items-center justify-between gap-2 text-ink-muted">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">Evaluated Pairs</span>
+          <span title="Matching hourly forecast and actual records" className="cursor-help shrink-0">
+            <HelpCircle className="h-3.5 w-3.5 text-ink-faint" />
           </span>
         </div>
-        <div className="text-2xl font-bold text-ink font-mono tabular-nums">
-          {metrics.pairs} <span className="text-xs font-normal text-ink-muted font-sans">hours</span>
+        <div className="font-mono text-[28px] font-semibold leading-none tabular-nums text-ink sm:text-[32px]">
+          {metrics.pairs} <span className="font-sans text-xs font-normal text-ink-muted">hours</span>
         </div>
-        <div className="text-xs text-ink-muted mt-1">Odd settlement periods</div>
+        <div className="mt-2 text-xs text-ink-muted">Odd settlement periods</div>
       </div>
     </section>
   );

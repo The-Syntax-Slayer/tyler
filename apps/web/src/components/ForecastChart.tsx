@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   ComposedChart,
-  Line,
+  Area,
   Bar,
   XAxis,
   YAxis,
@@ -21,19 +21,20 @@ interface ForecastChartProps {
   deliveryDate?: string;
 }
 
+const AXIS = { stroke: '#5d6e8c', fontSize: 11, tickLine: false };
+
 export function ForecastChart({ series, vintagePublishTime, deliveryDate }: ForecastChartProps) {
   const [viewMode, setViewMode] = useState<'chart' | 'table'>('chart');
   const [showResiduals, setShowResiduals] = useState(true);
 
   if (!series || series.length === 0) {
     return (
-      <div className="bg-surface p-12 rounded-card border border-line text-center text-ink-muted">
+      <div className="rounded-card border border-line bg-surface p-12 text-center text-ink-muted">
         No forecast and actual data points available for this period.
       </div>
     );
   }
 
-  // Pre-process data for tooltip and display
   const chartData = series.map((pt) => ({
     ...pt,
     timeLabel: formatHourTick(pt.startTime),
@@ -41,14 +42,15 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
   }));
 
   return (
-    <div className="bg-surface p-4 rounded-card border border-line shadow-card">
+    <div className="edge-glow rounded-card border border-line bg-surface p-4 shadow-card sm:p-5">
       {/* Header controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-line">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3">
         <div>
-          <h2 className="text-sm font-semibold text-ink">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-ink">
+            <span className="h-2 w-2 rounded-full bg-accent shadow-glow" aria-hidden="true" />
             Generation Profile: Forecast vs Actual
           </h2>
-          <p className="text-xs text-ink-muted">
+          <p className="mt-0.5 text-xs text-ink-muted">
             Hourly resolution (odd settlement periods 1–47) · All times UTC
           </p>
         </div>
@@ -58,10 +60,11 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
             <button
               type="button"
               onClick={() => setShowResiduals(!showResiduals)}
-              className={`px-2.5 py-1 text-xs rounded-control border transition-colors ${
+              aria-pressed={showResiduals}
+              className={`rounded-control border px-2.5 py-1.5 text-xs font-medium transition-colors ${
                 showResiduals
-                  ? 'bg-paper text-ink border-line font-medium'
-                  : 'bg-surface text-ink-muted border-line/60 hover:text-ink'
+                  ? 'border-accent/50 bg-accent-dim text-accent'
+                  : 'border-line bg-surface text-ink-muted hover:text-ink'
               }`}
             >
               {showResiduals ? 'Hide Residuals' : 'Show Residuals'}
@@ -71,16 +74,16 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
           <button
             type="button"
             onClick={() => setViewMode(viewMode === 'chart' ? 'table' : 'chart')}
-            className="flex items-center gap-1.5 px-3 py-1 text-xs rounded-control bg-accent text-white font-medium hover:bg-accent-hover transition-colors"
+            className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-[#062a30] transition-colors hover:bg-accent-hover"
             aria-label={viewMode === 'chart' ? 'Switch to accessible data table' : 'Switch to chart visualization'}
           >
             {viewMode === 'chart' ? (
               <>
-                <Table className="w-3.5 h-3.5" aria-hidden="true" /> Table View
+                <Table className="h-3.5 w-3.5" aria-hidden="true" /> Table View
               </>
             ) : (
               <>
-                <ChartIcon className="w-3.5 h-3.5" aria-hidden="true" /> Chart View
+                <ChartIcon className="h-3.5 w-3.5" aria-hidden="true" /> Chart View
               </>
             )}
           </button>
@@ -90,56 +93,56 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
       {viewMode === 'chart' ? (
         <div className="h-[380px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chartData} margin={{ top: 10, right: 15, left: 10, bottom: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ddd8cc" vertical={false} />
-              <XAxis
-                dataKey="timeLabel"
-                stroke="#4b5563"
-                fontSize={12}
-                tickLine={false}
-                axisLine={{ stroke: '#ddd8cc' }}
-                dy={6}
-              />
+            <ComposedChart data={chartData} margin={{ top: 10, right: 8, left: 0, bottom: 20 }}>
+              <defs>
+                <linearGradient id="forecastFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.32} />
+                  <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.02} />
+                </linearGradient>
+                <linearGradient id="actualFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#fbbf24" stopOpacity={0.22} />
+                  <stop offset="100%" stopColor="#fbbf24" stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#16223a" vertical={false} />
+              <XAxis dataKey="timeLabel" {...AXIS} axisLine={{ stroke: '#1d2a44' }} dy={6} />
               <YAxis
                 yAxisId="generation"
-                stroke="#4b5563"
-                fontSize={12}
-                tickLine={false}
-                axisLine={{ stroke: '#ddd8cc' }}
+                {...AXIS}
+                axisLine={{ stroke: '#1d2a44' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
-                label={{ value: 'Generation (MW)', angle: -90, position: 'insideLeft', offset: -2, style: { fontSize: 12, fill: '#4b5563' } }}
+                label={{ value: 'Generation (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#5d6e8c' } }}
               />
               {showResiduals && (
                 <YAxis
                   yAxisId="residual"
                   orientation="right"
-                  stroke="#4b5563"
-                  fontSize={11}
-                  tickLine={false}
-                  axisLine={{ stroke: '#ddd8cc' }}
+                  {...AXIS}
+                  axisLine={{ stroke: '#1d2a44' }}
                   tickFormatter={(val) => `${(val / 1000).toFixed(1)}k`}
-                  label={{ value: 'Residual (MW)', angle: 90, position: 'insideRight', offset: 0, style: { fontSize: 11, fill: '#4b5563' } }}
+                  label={{ value: 'Residual (MW)', angle: 90, position: 'insideRight', offset: 0, style: { fontSize: 11, fill: '#5d6e8c' } }}
                 />
               )}
               <Tooltip
+                cursor={{ stroke: '#2c3d61', strokeDasharray: '4 4' }}
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const item = payload[0].payload as typeof chartData[0];
                   return (
-                    <div className="bg-surface p-3 rounded-control border border-line shadow-card text-xs font-mono space-y-1">
-                      <div className="font-sans font-semibold text-ink border-b border-line pb-1">
+                    <div className="space-y-1 rounded-control border border-line bg-surface-raised p-3 font-mono text-xs shadow-card">
+                      <div className="border-b border-line pb-1 font-sans font-semibold text-ink">
                         Settlement Period {item.settlementPeriod} ({item.fullTime})
                       </div>
-                      <div className="flex justify-between gap-4 text-blue-700">
+                      <div className="flex justify-between gap-4 text-forecast">
                         <span className="font-sans">WINDFOR Forecast:</span>
                         <span className="font-bold tabular-nums">{formatMW(item.forecastMW)}</span>
                       </div>
-                      <div className="flex justify-between gap-4 text-amber-800">
+                      <div className="flex justify-between gap-4 text-actual">
                         <span className="font-sans">FUELHH Actual:</span>
                         <span className="font-bold tabular-nums">{formatMW(item.actualMW)}</span>
                       </div>
                       <div
-                        className={`flex justify-between gap-4 pt-1 border-t border-line ${
+                        className={`flex justify-between gap-4 border-t border-line pt-1 ${
                           item.residualMW >= 0 ? 'text-residual-pos' : 'text-residual-neg'
                         }`}
                       >
@@ -147,7 +150,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                         <span className="font-bold tabular-nums">{formatResidualMW(item.residualMW)}</span>
                       </div>
                       {vintagePublishTime && (
-                        <div className="pt-1 text-[10px] text-ink-muted font-sans">
+                        <div className="pt-1 font-sans text-[10px] text-ink-muted">
                           Forecast published: {vintagePublishTime}
                         </div>
                       )}
@@ -159,72 +162,68 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                 verticalAlign="top"
                 align="right"
                 wrapperStyle={{ paddingBottom: 10, fontSize: 12 }}
-                formatter={(value) => <span className="text-xs text-slate-800 font-medium">{value}</span>}
+                formatter={(value) => <span className="text-xs font-medium text-ink-muted">{value}</span>}
               />
               {showResiduals && (
-                <Bar
-                  yAxisId="residual"
-                  dataKey="residualMW"
-                  name="Residual (MW)"
-                  opacity={0.65}
-                  barSize={12}
-                >
+                <Bar yAxisId="residual" dataKey="residualMW" name="Residual (MW)" opacity={0.55} barSize={12} radius={[3, 3, 0, 0]}>
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.residualMW >= 0 ? '#b91c1c' : '#1d4ed8'}
+                      fill={entry.residualMW >= 0 ? '#fb7185' : '#38bdf8'}
                     />
                   ))}
                 </Bar>
               )}
-              <Line
+              <Area
                 yAxisId="generation"
                 type="monotone"
                 dataKey="forecastMW"
                 name="WINDFOR Forecast"
-                stroke="#2563eb"
+                stroke="#38bdf8"
                 strokeWidth={2.5}
-                dot={{ r: 3, fill: '#2563eb' }}
-                activeDot={{ r: 5 }}
+                fill="url(#forecastFill)"
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0 }}
               />
-              <Line
+              <Area
                 yAxisId="generation"
                 type="monotone"
                 dataKey="actualMW"
                 name="FUELHH Actual"
-                stroke="#b45309"
+                stroke="#fbbf24"
                 strokeWidth={2.5}
-                dot={{ r: 3, fill: '#b45309' }}
-                activeDot={{ r: 5 }}
+                fill="url(#actualFill)"
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0 }}
               />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       ) : (
-        /* Accessible HTML Data Table View */
-        <div className="overflow-x-auto max-h-[420px]">
-          <table className="w-full text-left text-xs border-collapse">
+        /* Accessible HTML data table view */
+        <div className="max-h-[420px] overflow-x-auto">
+          <table className="w-full border-collapse text-left text-xs">
             <caption className="sr-only">
               Hourly wind generation comparison for delivery date {deliveryDate || ''}
             </caption>
-            <thead className="bg-paper sticky top-0 border-b border-line text-ink-muted">
+            <thead className="sticky top-0 border-b border-line bg-surface-raised text-ink-muted">
               <tr>
                 <th scope="col" className="p-2.5 font-semibold">Period</th>
                 <th scope="col" className="p-2.5 font-semibold">Start Time (UTC)</th>
-                <th scope="col" className="p-2.5 font-semibold text-right">WINDFOR Forecast</th>
-                <th scope="col" className="p-2.5 font-semibold text-right">FUELHH Actual</th>
-                <th scope="col" className="p-2.5 font-semibold text-right">Residual</th>
+                <th scope="col" className="p-2.5 text-right font-semibold">WINDFOR Forecast</th>
+                <th scope="col" className="p-2.5 text-right font-semibold">FUELHH Actual</th>
+                <th scope="col" className="p-2.5 text-right font-semibold">Residual</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line/60 font-mono">
               {series.map((row) => (
-                <tr key={row.startTime} className="hover:bg-surface-subtle transition-colors">
+                <tr key={row.startTime} className="transition-colors hover:bg-surface-subtle">
                   <td className="p-2.5 text-ink-muted">{row.settlementPeriod}</td>
                   <td className="p-2.5 text-ink">{formatTimeUTC(row.startTime)}</td>
-                  <td className="p-2.5 text-right font-semibold text-blue-700 tabular-nums">
+                  <td className="p-2.5 text-right font-semibold tabular-nums text-forecast">
                     {formatMW(row.forecastMW)}
                   </td>
-                  <td className="p-2.5 text-right font-semibold text-amber-800 tabular-nums">
+                  <td className="p-2.5 text-right font-semibold tabular-nums text-actual">
                     {formatMW(row.actualMW)}
                   </td>
                   <td
