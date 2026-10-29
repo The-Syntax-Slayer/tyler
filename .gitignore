@@ -24,7 +24,11 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Root-level build artifact dir only. A bare `lib/` pattern also ignores
+# source dirs such as apps/web/src/lib/ (the API client + formatting
+# modules) — that silently dropped them from an earlier commit and broke
+# the production build.
+/lib/
 lib64/
 parts/
 sdist/
