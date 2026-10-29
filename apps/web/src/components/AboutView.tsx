@@ -17,14 +17,14 @@ function SectionCard({
   return (
     <section
       className={`edge-glow rounded-card border bg-surface p-6 shadow-card ${
-        tone === 'warn' ? 'border-amber-400/30' : 'border-line'
+        tone === 'warn' ? 'border-amber-300' : 'border-line'
       }`}
     >
       <h2 className="flex items-center gap-2.5 text-base font-semibold text-ink">
         <span className={`flex h-8 w-8 items-center justify-center rounded-control border ${
-          tone === 'warn' ? 'border-amber-400/40 bg-amber-400/10' : 'border-accent/30 bg-accent-dim'
+          tone === 'warn' ? 'border-amber-300 bg-amber-50' : 'border-accent/30 bg-accent-dim'
         }`}>
-          <Icon className={`h-4 w-4 ${tone === 'warn' ? 'text-amber-300' : 'text-accent'}`} />
+          <Icon className={`h-4 w-4 ${tone === 'warn' ? 'text-amber-700' : 'text-accent'}`} />
         </span>
         {title}
       </h2>

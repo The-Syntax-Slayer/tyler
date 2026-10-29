@@ -93,8 +93,8 @@ export function AccuracyView() {
       )}
 
       {error && (
-        <div className="flex items-center gap-2 rounded-card border border-rose-400/30 bg-rose-400/10 p-4 text-xs text-rose-200">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-300" />
+        <div className="flex items-center gap-2 rounded-card border border-rose-200 bg-rose-50 p-4 text-xs text-rose-700">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
           <span>{error}</span>
         </div>
       )}
@@ -133,7 +133,7 @@ export function AccuracyView() {
             <button
               type="button"
               onClick={() => setHorizonViewMode(horizonViewMode === 'chart' ? 'table' : 'chart')}
-              className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-[#062a30] transition-colors hover:bg-accent-hover"
+              className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-accent-hover"
               aria-label={horizonViewMode === 'chart' ? 'Switch to accessible table' : 'Switch to chart view'}
             >
               {horizonViewMode === 'chart' ? (
@@ -152,23 +152,23 @@ export function AccuracyView() {
             <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data.perHorizonHours} margin={{ top: 10, right: 15, left: 0, bottom: 20 }} barCategoryGap="28%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#16223a" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                   <XAxis
                     dataKey="horizonHours"
-                    stroke="#5d6e8c"
+                    stroke="#64748b"
                     fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: '#1d2a44' }}
+                    axisLine={{ stroke: '#e2e8f0' }}
                     tickFormatter={(val) => `${val}h`}
-                    label={{ value: 'Forecast Horizon (Hours Ahead)', position: 'insideBottom', offset: -12, style: { fontSize: 11, fill: '#5d6e8c' } }}
+                    label={{ value: 'Forecast Horizon (Hours Ahead)', position: 'insideBottom', offset: -12, style: { fontSize: 11, fill: '#64748b' } }}
                   />
                   <YAxis
-                    stroke="#5d6e8c"
+                    stroke="#64748b"
                     fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: '#1d2a44' }}
+                    axisLine={{ stroke: '#e2e8f0' }}
                     tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
-                    label={{ value: 'Error (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#5d6e8c' } }}
+                    label={{ value: 'Error (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#64748b' } }}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(34, 211, 238, 0.06)' }}
@@ -202,8 +202,8 @@ export function AccuracyView() {
                     wrapperStyle={{ paddingBottom: 10, fontSize: 12 }}
                     formatter={(value) => <span className="text-xs font-medium text-ink-muted">{value}</span>}
                   />
-                  <Bar dataKey="maeMW" name="MAE (MW)" fill="#22d3ee" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="biasMW" name="Bias (MW)" fill="#fbbf24" radius={[4, 4, 0, 0]} opacity={0.85} />
+                  <Bar dataKey="maeMW" name="MAE (MW)" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="biasMW" name="Bias (MW)" fill="#d97706" radius={[4, 4, 0, 0]} opacity={0.85} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

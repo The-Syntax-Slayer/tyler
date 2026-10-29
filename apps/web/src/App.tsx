@@ -72,7 +72,7 @@ export default function App() {
                   aria-current={activeTab === id ? 'page' : undefined}
                   className={`flex shrink-0 items-center gap-1.5 rounded-[6px] px-3 py-2 text-xs font-semibold whitespace-nowrap transition-all ${
                     activeTab === id
-                      ? 'bg-accent text-[#062a30] shadow-glow'
+                      ? 'bg-accent text-white shadow-glow'
                       : 'text-ink-muted hover:bg-surface-raised hover:text-ink'
                   }`}
                 >
@@ -93,7 +93,7 @@ export default function App() {
                   className={`flex items-center gap-1.5 rounded-control border px-2.5 py-2 text-xs font-semibold ${
                     health.cacheLoaded
                       ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
-                      : 'border-rose-400/30 bg-rose-400/10 text-rose-300'
+                      : 'border-rose-200 bg-rose-50 text-rose-600'
                   }`}
                   title={
                     health.cacheLoaded

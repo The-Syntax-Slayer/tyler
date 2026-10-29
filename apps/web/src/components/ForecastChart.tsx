@@ -21,7 +21,7 @@ interface ForecastChartProps {
   deliveryDate?: string;
 }
 
-const AXIS = { stroke: '#5d6e8c', fontSize: 11, tickLine: false };
+const AXIS = { stroke: '#64748b', fontSize: 11, tickLine: false };
 
 export function ForecastChart({ series, vintagePublishTime, deliveryDate }: ForecastChartProps) {
   const [viewMode, setViewMode] = useState<'chart' | 'table'>('chart');
@@ -74,7 +74,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
           <button
             type="button"
             onClick={() => setViewMode(viewMode === 'chart' ? 'table' : 'chart')}
-            className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-[#062a30] transition-colors hover:bg-accent-hover"
+            className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-accent-hover"
             aria-label={viewMode === 'chart' ? 'Switch to accessible data table' : 'Switch to chart visualization'}
           >
             {viewMode === 'chart' ? (
@@ -96,35 +96,35 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
             <ComposedChart data={chartData} margin={{ top: 10, right: 8, left: 0, bottom: 20 }}>
               <defs>
                 <linearGradient id="forecastFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.32} />
-                  <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.02} />
+                  <stop offset="0%" stopColor="#2563eb" stopOpacity={0.32} />
+                  <stop offset="100%" stopColor="#2563eb" stopOpacity={0.02} />
                 </linearGradient>
                 <linearGradient id="actualFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#fbbf24" stopOpacity={0.22} />
-                  <stop offset="100%" stopColor="#fbbf24" stopOpacity={0.02} />
+                  <stop offset="0%" stopColor="#d97706" stopOpacity={0.22} />
+                  <stop offset="100%" stopColor="#d97706" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#16223a" vertical={false} />
-              <XAxis dataKey="timeLabel" {...AXIS} axisLine={{ stroke: '#1d2a44' }} dy={6} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+              <XAxis dataKey="timeLabel" {...AXIS} axisLine={{ stroke: '#e2e8f0' }} dy={6} />
               <YAxis
                 yAxisId="generation"
                 {...AXIS}
-                axisLine={{ stroke: '#1d2a44' }}
+                axisLine={{ stroke: '#e2e8f0' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
-                label={{ value: 'Generation (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#5d6e8c' } }}
+                label={{ value: 'Generation (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#64748b' } }}
               />
               {showResiduals && (
                 <YAxis
                   yAxisId="residual"
                   orientation="right"
                   {...AXIS}
-                  axisLine={{ stroke: '#1d2a44' }}
+                  axisLine={{ stroke: '#e2e8f0' }}
                   tickFormatter={(val) => `${(val / 1000).toFixed(1)}k`}
-                  label={{ value: 'Residual (MW)', angle: 90, position: 'insideRight', offset: 0, style: { fontSize: 11, fill: '#5d6e8c' } }}
+                  label={{ value: 'Residual (MW)', angle: 90, position: 'insideRight', offset: 0, style: { fontSize: 11, fill: '#64748b' } }}
                 />
               )}
               <Tooltip
-                cursor={{ stroke: '#2c3d61', strokeDasharray: '4 4' }}
+                cursor={{ stroke: '#cbd5e1', strokeDasharray: '4 4' }}
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const item = payload[0].payload as typeof chartData[0];
@@ -169,7 +169,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.residualMW >= 0 ? '#fb7185' : '#38bdf8'}
+                      fill={entry.residualMW >= 0 ? '#e11d48' : '#2563eb'}
                     />
                   ))}
                 </Bar>
@@ -179,7 +179,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                 type="monotone"
                 dataKey="forecastMW"
                 name="WINDFOR Forecast"
-                stroke="#38bdf8"
+                stroke="#2563eb"
                 strokeWidth={2.5}
                 fill="url(#forecastFill)"
                 dot={false}
@@ -190,7 +190,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                 type="monotone"
                 dataKey="actualMW"
                 name="FUELHH Actual"
-                stroke="#fbbf24"
+                stroke="#d97706"
                 strokeWidth={2.5}
                 fill="url(#actualFill)"
                 dot={false}

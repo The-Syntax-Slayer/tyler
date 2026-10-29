@@ -23,11 +23,11 @@ export function CaveatBanner() {
   return (
     <section
       aria-label="Dataset Scope Caveat"
-      className="mb-6 rounded-card border border-amber-400/30 bg-amber-400/[0.07] p-4 text-amber-100 shadow-card"
+      className="mb-6 rounded-card border border-amber-300 bg-amber-50 p-4 text-amber-900 shadow-card"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2.5">
-          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" aria-hidden="true" />
           <div className="max-w-[70ch]">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-bold text-amber-50">
@@ -36,7 +36,7 @@ export function CaveatBanner() {
               <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-0.5 text-xs font-semibold text-amber-300 hover:underline"
+                className="flex items-center gap-0.5 text-xs font-semibold text-amber-700 hover:underline"
                 aria-expanded={isOpen}
               >
                 {isOpen ? (
@@ -46,13 +46,13 @@ export function CaveatBanner() {
                 )}
               </button>
             </div>
-            <p className="mt-1 max-w-[70ch] text-xs leading-relaxed text-amber-100/90 text-pretty">
+            <p className="mt-1 max-w-[70ch] text-xs leading-relaxed text-amber-800 text-pretty">
               <strong>WINDFOR</strong> forecasts total GB wind generation (including embedded and distribution-connected wind),
               whereas <strong>FUELHH WIND</strong> records only transmission-system metered outturn.
               This structural scope difference accounts for the consistent positive bias (~3.5–6.3 GW) and is not pure forecast model error.
             </p>
             {isOpen && (
-              <div className="mt-2.5 space-y-1.5 border-t border-amber-400/20 pt-2.5 text-xs text-amber-100/90 text-pretty">
+              <div className="mt-2.5 space-y-1.5 border-t border-amber-200 pt-2.5 text-xs text-amber-800 text-pretty">
                 <p>
                   • <strong>No Invented Offsets:</strong> The app never applies arbitrary calibration offsets to alter raw Elexon data.
                 </p>
@@ -69,7 +69,7 @@ export function CaveatBanner() {
         <button
           type="button"
           onClick={() => setIsDismissed(true)}
-          className="rounded p-1 text-amber-300 transition-colors hover:bg-amber-400/10 hover:text-amber-100"
+          className="rounded p-1 text-amber-700 transition-colors hover:bg-amber-100 hover:text-amber-900"
           title="Dismiss notice"
           aria-label="Dismiss dataset scope notice"
         >

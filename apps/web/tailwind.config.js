@@ -7,39 +7,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Off-white text on deep navy-black surfaces. Elevation comes from
-        // surface steps + hairline borders, not shadows.
+        // Light, professional enterprise palette. Elevation comes from
+        // hairline borders + restrained shadows, not colour steps.
         ink: {
-          DEFAULT: '#e6edf7',
-          muted: '#93a3bd',
-          faint: '#5d6e8c',
+          DEFAULT: '#0f172a',
+          muted: '#475569',
+          faint: '#94a3b8',
         },
-        paper: '#070b16',
+        paper: '#f8fafc',
         surface: {
-          DEFAULT: '#0c1322',
-          subtle: '#101a2f',
-          raised: '#152238',
+          DEFAULT: '#ffffff',
+          subtle: '#f1f5f9',
+          raised: '#ffffff',
         },
         line: {
-          DEFAULT: '#1d2a44',
-          strong: '#2c3d61',
+          DEFAULT: '#e2e8f0',
+          strong: '#cbd5e1',
         },
-        // Single electric accent. Saturated colour is reserved for meaning:
-        // forecast / actual / residual only.
+        // Single restrained accent: deep professional blue.
         accent: {
-          DEFAULT: '#22d3ee',
-          hover: '#67e8f9',
-          dim: 'rgba(34, 211, 238, 0.12)',
+          DEFAULT: '#1d4ed8',
+          hover: '#1e40af',
+          dim: '#eff6ff',
         },
-        volt: '#a3e635',
-        forecast: '#38bdf8',
+        volt: '#0f766e',
+        forecast: '#2563eb',
         actual: {
-          DEFAULT: '#fbbf24',
-          chart: '#f59e0b',
+          DEFAULT: '#d97706',
+          chart: '#b45309',
         },
         residual: {
-          pos: '#fb7185',
-          neg: '#38bdf8',
+          pos: '#e11d48',
+          neg: '#0284c7',
         },
       },
       fontFamily: {
@@ -47,22 +46,22 @@ export default {
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
-        card: '14px',
-        control: '8px',
+        card: '10px',
+        control: '6px',
       },
       boxShadow: {
-        card: '0 0 0 1px rgba(45, 62, 99, 0.35), 0 12px 32px -16px rgba(0, 0, 0, 0.7)',
-        glow: '0 0 24px -6px rgba(34, 211, 238, 0.45)',
-        panel: 'inset 0 1px 0 0 rgba(230, 237, 247, 0.05)',
+        card: '0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.04)',
+        glow: '0 1px 2px rgba(29, 78, 216, 0.25)',
+        panel: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.9)',
       },
       keyframes: {
         rise: {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '0%': { opacity: '0', transform: 'translateY(4px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         pulseDot: {
-          '0%, 100%': { opacity: '1', boxShadow: '0 0 0 0 rgba(163, 230, 53, 0.55)' },
-          '50%': { opacity: '0.75', boxShadow: '0 0 0 5px rgba(163, 230, 53, 0)' },
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.35' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-400px 0' },
@@ -70,8 +69,8 @@ export default {
         },
       },
       animation: {
-        rise: 'rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both',
-        pulseDot: 'pulseDot 2s ease-in-out infinite',
+        rise: 'rise 0.35s ease-out both',
+        pulseDot: 'pulseDot 1.6s ease-in-out infinite',
         shimmer: 'shimmer 1.4s linear infinite',
       },
     },

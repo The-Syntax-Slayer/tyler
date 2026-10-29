@@ -93,8 +93,8 @@ export function VintageExplorer() {
       )}
 
       {error && (
-        <div className="flex items-center gap-2 rounded-card border border-rose-400/30 bg-rose-400/10 p-4 text-xs text-rose-200">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-300" />
+        <div className="flex items-center gap-2 rounded-card border border-rose-200 bg-rose-50 p-4 text-xs text-rose-700">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
           <span>{error}</span>
         </div>
       )}
@@ -147,7 +147,7 @@ export function VintageExplorer() {
               type="button"
               onClick={() => setIsPlaying(!isPlaying)}
               disabled={vintages.length <= 1}
-              className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-[#062a30] transition-colors hover:bg-accent-hover disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-control bg-accent px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-40"
               aria-label={isPlaying ? 'Pause replay' : 'Play revision sequence'}
             >
               {isPlaying ? (
@@ -219,28 +219,28 @@ export function VintageExplorer() {
               <ComposedChart data={chartData} margin={{ top: 10, right: 15, left: 0, bottom: 20 }}>
                 <defs>
                   <linearGradient id="explorerFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.34} />
-                    <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.02} />
+                    <stop offset="0%" stopColor="#2563eb" stopOpacity={0.34} />
+                    <stop offset="100%" stopColor="#2563eb" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#16223a" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis
                   dataKey="timeLabel"
-                  stroke="#5d6e8c"
+                  stroke="#64748b"
                   fontSize={11}
                   tickLine={false}
-                  axisLine={{ stroke: '#1d2a44' }}
+                  axisLine={{ stroke: '#e2e8f0' }}
                 />
                 <YAxis
-                  stroke="#5d6e8c"
+                  stroke="#64748b"
                   fontSize={11}
                   tickLine={false}
-                  axisLine={{ stroke: '#1d2a44' }}
+                  axisLine={{ stroke: '#e2e8f0' }}
                   tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
-                  label={{ value: 'Generation (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#5d6e8c' } }}
+                  label={{ value: 'Generation (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#64748b' } }}
                 />
                 <Tooltip
-                  cursor={{ stroke: '#2c3d61', strokeDasharray: '4 4' }}
+                  cursor={{ stroke: '#cbd5e1', strokeDasharray: '4 4' }}
                   content={({ active, payload }) => {
                     if (!active || !payload || !payload.length) return null;
                     const item = payload[0].payload as typeof chartData[0];
@@ -270,10 +270,10 @@ export function VintageExplorer() {
                   type="monotone"
                   dataKey="forecastMW"
                   name={`WINDFOR (Published ${formatTimeUTC(currentVintage.publishTime)})`}
-                  stroke="#38bdf8"
+                  stroke="#2563eb"
                   strokeWidth={2.5}
                   fill="url(#explorerFill)"
-                  dot={{ r: 3, fill: '#38bdf8', strokeWidth: 0 }}
+                  dot={{ r: 3, fill: '#2563eb', strokeWidth: 0 }}
                   activeDot={{ r: 5, strokeWidth: 0 }}
                 />
               </ComposedChart>

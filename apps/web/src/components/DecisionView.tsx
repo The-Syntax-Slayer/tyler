@@ -100,7 +100,7 @@ export function DecisionView() {
         <button
           type="button"
           onClick={fetchDecisionData}
-          className="rounded-control bg-accent px-4 py-2 text-xs font-semibold text-[#062a30] hover:bg-accent-hover"
+          className="rounded-control bg-accent px-4 py-2 text-xs font-semibold text-white hover:bg-accent-hover"
         >
           Retry Connection
         </button>
@@ -155,7 +155,7 @@ export function DecisionView() {
                     aria-pressed={active}
                     className={`flex-1 rounded-[6px] px-2 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${
                       active
-                        ? 'bg-accent text-[#062a30] shadow-glow'
+                        ? 'bg-accent text-white shadow-glow'
                         : 'text-ink-muted hover:text-ink'
                     }`}
                   >
@@ -212,15 +212,15 @@ export function DecisionView() {
 
       {/* Error state */}
       {error && (
-        <div className="flex items-center justify-between rounded-card border border-rose-400/30 bg-rose-400/10 p-4 text-xs text-rose-200">
+        <div className="flex items-center justify-between rounded-card border border-rose-200 bg-rose-50 p-4 text-xs text-rose-700">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-300" />
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
           <button
             type="button"
             onClick={fetchDecisionData}
-            className="rounded-control bg-rose-400/20 px-2.5 py-1 font-medium text-rose-100 hover:bg-rose-400/30"
+            className="rounded-control bg-rose-100 px-2.5 py-1 font-medium text-rose-700 hover:bg-rose-200"
           >
             Retry
           </button>
