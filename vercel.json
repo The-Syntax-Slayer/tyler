@@ -1,1 +1,12 @@
-{"$schema":"https://openapi.vercel.sh/vercel.json","buildCommand":"npm --prefix apps/web run build","functions":{"api/index.py":{"includeFiles":"apps/api/app/**","maxDuration":30}},"outputDirectory":"apps/web/dist"}
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm --prefix apps/web run build",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "apps/api/app/**",
+      "maxDuration": 30
+    }
+  },
+  "outputDirectory": "apps/web/dist",
+  "installCommand": "npm --prefix apps/web install"
+}
