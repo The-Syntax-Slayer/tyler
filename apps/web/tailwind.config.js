@@ -8,21 +8,24 @@ export default {
     extend: {
       colors: {
         ink: {
-          DEFAULT: '#16211f',
-          muted: '#4b5563',
+          DEFAULT: '#0f172a',
+          muted: '#475569',
         },
-        paper: '#f7f5ef',
+        paper: '#f8fafc',
         surface: {
-          DEFAULT: '#fffdf8',
-          subtle: '#f0eee6',
+          DEFAULT: '#ffffff',
+          subtle: '#f1f5f9',
         },
-        line: '#ddd8cc',
+        line: '#cbd5e1',
         accent: {
           DEFAULT: '#0f766e',
           hover: '#115e59',
         },
-        forecast: '#2563eb',
-        actual: '#d97706',
+        forecast: '#1d4ed8',
+        actual: {
+          DEFAULT: '#b45309',
+          chart: '#d97706',
+        },
         residual: {
           pos: '#b91c1c',
           neg: '#1d4ed8',
@@ -37,7 +40,7 @@ export default {
         control: '6px',
       },
       boxShadow: {
-        card: '0 1px 3px 0 rgba(22, 33, 31, 0.05), 0 1px 2px -1px rgba(22, 33, 31, 0.05)',
+        card: '0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
       },
     },
   },

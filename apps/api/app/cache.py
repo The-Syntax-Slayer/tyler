@@ -20,7 +20,7 @@ _DATA_DIR = Path(os.getenv("CACHE_DIR", Path(__file__).resolve().parent / "data"
 
 _fuelhh_cache: Optional[List[Dict[str, Any]]] = None
 _windfor_cache: Optional[List[Dict[str, Any]]] = None
-_provenance_cache: Optional[Dict[str, Any]]] = None
+_provenance_cache: Optional[Dict[str, Any]] = None
 
 
 def get_data_dir() -> Path:

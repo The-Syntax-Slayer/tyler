@@ -10,8 +10,8 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-paper text-ink font-sans antialiased selection:bg-accent/20;
+  html, body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-accent/20;
     min-height: 100vh;
   }
 
