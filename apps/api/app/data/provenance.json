@@ -1,0 +1,21 @@
+{
+  "sources": [
+    "https://data.elexon.co.uk/bmrs/api/v1/datasets/FUELHH",
+    "https://data.elexon.co.uk/bmrs/api/v1/forecast/generation/wind/history"
+  ],
+  "window": {
+    "from": "2026-01-01",
+    "to": "2026-01-31"
+  },
+  "fetchedAt": "2026-10-29T19:01:30Z",
+  "apiKeyUsed": false,
+  "fuelhh": {
+    "totalRows": 1488,
+    "datesCount": 31
+  },
+  "windfor": {
+    "totalRows": 16352,
+    "distinctVintages": 224
+  },
+  "scopeNote": "WINDFOR forecasts national wind generation (including embedded/distribution wind); FUELHH WIND records transmission-metered actuals. Bias is reported separately from MAE/RMSE."
+}
