@@ -66,6 +66,11 @@ export function AccuracyView() {
     });
   }, [data, sortField, sortOrder]);
 
+  const maxHorizon = useMemo(() => {
+    if (!data?.perHorizonHours || data.perHorizonHours.length === 0) return 0;
+    return Math.max(...data.perHorizonHours.map((h) => h.horizonHours));
+  }, [data]);
+
   // Month-wide averages
   const monthAverages = useMemo(() => {
     if (!data?.perVintage || data.perVintage.length === 0) return null;
@@ -103,7 +108,7 @@ export function AccuracyView() {
       {monthAverages && (
         <section aria-label="January 2026 Aggregate Performance" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            { label: 'Evaluated Vintages', value: String(monthAverages.vintagesCount), note: 'Across 31 delivery days', cls: 'text-ink', bar: 'bg-accent' },
+            { label: 'Vintage Evaluations', value: String(monthAverages.vintagesCount), note: 'One row per delivery day × vintage', cls: 'text-ink', bar: 'bg-accent' },
             { label: 'Window Avg MAE', value: formatMW(monthAverages.avgMae), note: 'Mean absolute deviation', cls: 'text-ink', bar: 'bg-forecast' },
             { label: 'Window Avg RMSE', value: formatMW(monthAverages.avgRmse), note: 'Root mean squared deviation', cls: 'text-ink', bar: 'bg-actual' },
             { label: 'Window Avg Bias', value: formatResidualMW(monthAverages.avgBias), note: 'Structural scope gap', cls: 'text-residual-pos', bar: 'bg-residual-pos' },
@@ -127,7 +132,7 @@ export function AccuracyView() {
             <div>
               <h2 className="text-base font-bold text-ink">Forecast Error vs Lead Time Horizon</h2>
               <p className="mt-0.5 text-xs text-ink-muted">
-                Grouped by lead time hours = startTime − publishTime (0h to 48h)
+                Grouped by lead time hours = startTime − publishTime (0h to {maxHorizon}h)
               </p>
             </div>
             <button
@@ -167,11 +172,11 @@ export function AccuracyView() {
                     fontSize={11}
                     tickLine={false}
                     axisLine={{ stroke: '#e2e8f0' }}
-                    tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
+                    tickFormatter={(val) => `${Number((val / 1000).toFixed(1))}k`}
                     label={{ value: 'Error (MW)', angle: -90, position: 'insideLeft', offset: 2, style: { fontSize: 11, fill: '#64748b' } }}
                   />
                   <Tooltip
-                    cursor={{ fill: 'rgba(34, 211, 238, 0.06)' }}
+                    cursor={{ fill: 'rgba(29, 78, 216, 0.06)' }}
                     content={({ active, payload }) => {
                       if (!active || !payload || !payload.length) return null;
                       const item = payload[0].payload as typeof data.perHorizonHours[0];
@@ -202,8 +207,8 @@ export function AccuracyView() {
                     wrapperStyle={{ paddingBottom: 10, fontSize: 12 }}
                     formatter={(value) => <span className="text-xs font-medium text-ink-muted">{value}</span>}
                   />
-                  <Bar dataKey="maeMW" name="MAE (MW)" fill="#2563eb" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="biasMW" name="Bias (MW)" fill="#d97706" radius={[4, 4, 0, 0]} opacity={0.85} />
+                  <Bar dataKey="maeMW" name="MAE (MW)" fill="#2563eb" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+                  <Bar dataKey="biasMW" name="Bias (MW)" fill="#d97706" radius={[4, 4, 0, 0]} opacity={0.85} isAnimationActive={false} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -246,7 +251,7 @@ export function AccuracyView() {
               Quantitative verification across each distinct forecast publication
             </p>
           </div>
-          <span className="font-mono text-xs text-ink-muted">Showing {sortedVintages.length} vintages</span>
+          <span className="font-mono text-xs text-ink-muted">Showing {sortedVintages.length} vintage evaluations</span>
         </div>
 
         <div className="max-h-[480px] overflow-x-auto">

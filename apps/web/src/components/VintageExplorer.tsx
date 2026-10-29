@@ -275,6 +275,7 @@ export function VintageExplorer() {
                   fill="url(#explorerFill)"
                   dot={{ r: 3, fill: '#2563eb', strokeWidth: 0 }}
                   activeDot={{ r: 5, strokeWidth: 0 }}
+                  isAnimationActive={false}
                 />
               </ComposedChart>
             </ResponsiveContainer>

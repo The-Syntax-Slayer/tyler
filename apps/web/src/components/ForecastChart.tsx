@@ -165,7 +165,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                 formatter={(value) => <span className="text-xs font-medium text-ink-muted">{value}</span>}
               />
               {showResiduals && (
-                <Bar yAxisId="residual" dataKey="residualMW" name="Residual (MW)" opacity={0.55} barSize={12} radius={[3, 3, 0, 0]}>
+                <Bar yAxisId="residual" dataKey="residualMW" name="Residual (MW)" opacity={0.55} barSize={12} radius={[3, 3, 0, 0]} isAnimationActive={false}>
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
@@ -184,6 +184,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                 fill="url(#forecastFill)"
                 dot={false}
                 activeDot={{ r: 4, strokeWidth: 0 }}
+                isAnimationActive={false}
               />
               <Area
                 yAxisId="generation"
@@ -195,6 +196,7 @@ export function ForecastChart({ series, vintagePublishTime, deliveryDate }: Fore
                 fill="url(#actualFill)"
                 dot={false}
                 activeDot={{ r: 4, strokeWidth: 0 }}
+                isAnimationActive={false}
               />
             </ComposedChart>
           </ResponsiveContainer>
