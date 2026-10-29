@@ -4,127 +4,96 @@ import { AccuracyView } from './components/AccuracyView';
 import { VintageExplorer } from './components/VintageExplorer';
 import { AboutView } from './components/AboutView';
 import { api, type HealthResponse } from './lib/api';
-import { Wind, BarChart2, History, BookOpen, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Wind, BarChart2, History, BookOpen, CheckCircle2, AlertCircle } from 'lucide-react';
 
 type Tab = 'decision' | 'accuracy' | 'explorer' | 'about';
+
+const TABS: { id: Tab; label: string; Icon: typeof Wind }[] = [
+  { id: 'decision', label: 'Decision View', Icon: Wind },
+  { id: 'accuracy', label: 'Accuracy Benchmarks', Icon: BarChart2 },
+  { id: 'explorer', label: 'Vintage Explorer', Icon: History },
+  { id: 'about', label: 'Data & Methods', Icon: BookOpen },
+];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('decision');
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [utcTime, setUtcTime] = useState<string>('');
 
-  // Live UTC Clock
+  // Live UTC clock — the market runs on UTC.
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      const hours = String(now.getUTCHours()).padStart(2, '0');
-      const minutes = String(now.getUTCMinutes()).padStart(2, '0');
-      const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-      setUtcTime(`${hours}:${minutes}:${seconds} UTC`);
+      const pad = (n: number) => String(n).padStart(2, '0');
+      setUtcTime(`${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())} UTC`);
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Health Check
   useEffect(() => {
     api.getHealth()
       .then(setHealth)
-      .catch(() => setHealth({ status: 'error', cacheLoaded: false, settlementDates: 0, vintages: 0 }));
+      .catch(() => setHealth({ status: 'error', cacheLoaded: false, settlementDates: 0, vintages: 0, cacheFetchedAt: null }));
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-paper text-ink font-sans selection:bg-accent/20">
-      {/* Top Header Bar */}
-      <header className="bg-surface border-b border-line sticky top-0 z-20 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-4 h-16 sm:h-20">
-            {/* Brand Title: icon in flow without container */}
-            <div className="flex items-center gap-2.5">
-              <Wind className="w-7 h-7 text-accent shrink-0" aria-hidden="true" />
+    <div className="min-h-screen flex flex-col">
+      {/* Frosted command header */}
+      <header className="sticky top-0 z-20 border-b border-line bg-paper/85 backdrop-blur-xl">
+        <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 py-3.5">
+            {/* Brand */}
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-accent/40 bg-accent-dim shadow-glow">
+                <Wind className="h-5 w-5 text-accent" aria-hidden="true" />
+              </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
-                  Wind Day-Ahead <span className="text-ink-muted font-normal text-lg sm:text-xl">| Forecast Accuracy</span>
-                </h1>
-                <p className="text-xs text-ink-muted hidden sm:block">
-                  Elexon BMRS · National Wind · January 2026 Decisions
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
+                  GB Day-Ahead Desk
                 </p>
+                <h1 className="text-lg font-bold leading-tight tracking-tight sm:text-xl">
+                  Wind Day-Ahead <span className="font-normal text-ink-muted">/ Forecast Accuracy</span>
+                </h1>
               </div>
             </div>
 
-            {/* Nav Tabs */}
-            <nav className="flex items-center gap-1 sm:gap-2" aria-label="Main Navigation">
-              <button
-                type="button"
-                onClick={() => setActiveTab('decision')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-control font-semibold transition-colors ${
-                  activeTab === 'decision'
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-ink-muted hover:text-ink hover:bg-surface-subtle'
-                }`}
-                aria-current={activeTab === 'decision' ? 'page' : undefined}
-              >
-                <Wind className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Decision View</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('accuracy')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-control font-semibold transition-colors ${
-                  activeTab === 'accuracy'
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-ink-muted hover:text-ink hover:bg-surface-subtle'
-                }`}
-                aria-current={activeTab === 'accuracy' ? 'page' : undefined}
-              >
-                <BarChart2 className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Accuracy Benchmarks</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('explorer')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-control font-semibold transition-colors ${
-                  activeTab === 'explorer'
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-ink-muted hover:text-ink hover:bg-surface-subtle'
-                }`}
-                aria-current={activeTab === 'explorer' ? 'page' : undefined}
-              >
-                <History className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Vintage Explorer</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('about')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-control font-semibold transition-colors ${
-                  activeTab === 'about'
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-ink-muted hover:text-ink hover:bg-surface-subtle'
-                }`}
-                aria-current={activeTab === 'about' ? 'page' : undefined}
-              >
-                <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Data & Methods</span>
-              </button>
+            {/* Tab rail */}
+            <nav
+              aria-label="Main Navigation"
+              className="order-3 flex w-full items-center gap-1 overflow-x-auto rounded-control border border-line bg-surface p-1 sm:order-none sm:w-auto sm:flex-1 sm:justify-center lg:mx-4"
+            >
+              {TABS.map(({ id, label, Icon }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setActiveTab(id)}
+                  aria-current={activeTab === id ? 'page' : undefined}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-[6px] px-3 py-2 text-xs font-semibold whitespace-nowrap transition-all ${
+                    activeTab === id
+                      ? 'bg-accent text-[#062a30] shadow-glow'
+                      : 'text-ink-muted hover:bg-surface-raised hover:text-ink'
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>{label}</span>
+                </button>
+              ))}
             </nav>
 
-            {/* Status indicators */}
-            <div className="hidden lg:flex items-center gap-3 text-xs font-mono">
-              <div className="flex items-center gap-1.5 text-ink-muted bg-surface-subtle px-2.5 py-1.5 rounded-control border border-line">
-                <Clock className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-                <span className="tabular-nums font-semibold">{utcTime || 'UTC'}</span>
+            {/* Live status */}
+            <div className="ml-auto flex items-center gap-2.5">
+              <div className="hidden items-center gap-2 rounded-control border border-line bg-surface px-2.5 py-2 font-mono text-xs text-ink-muted md:flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-volt animate-pulseDot" aria-hidden="true" />
+                <span className="tabular-nums font-medium text-ink">{utcTime || '— UTC'}</span>
               </div>
-
               {health && (
                 <div
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-control border text-xs font-medium ${
+                  className={`flex items-center gap-1.5 rounded-control border px-2.5 py-2 text-xs font-semibold ${
                     health.cacheLoaded
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                      : 'bg-red-50 text-red-800 border-red-300'
+                      ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
+                      : 'border-rose-400/30 bg-rose-400/10 text-rose-300'
                   }`}
                   title={
                     health.cacheLoaded
@@ -134,12 +103,13 @@ export default function App() {
                 >
                   {health.cacheLoaded ? (
                     <>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
-                      <span>Cache Active</span>
+                      <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span className="hidden sm:inline">Cache Live</span>
+                      <span className="sm:hidden">Live</span>
                     </>
                   ) : (
                     <>
-                      <AlertCircle className="w-3.5 h-3.5 text-red-700" aria-hidden="true" />
+                      <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Cache Offline</span>
                     </>
                   )}
@@ -148,25 +118,41 @@ export default function App() {
             </div>
           </div>
         </div>
+
+        {/* Data ticker strip */}
+        <div className="border-t border-line/70">
+          <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center gap-x-5 gap-y-1 px-4 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-faint sm:px-6 lg:px-8">
+            <span>Elexon BMRS only</span>
+            <span className="text-line-strong" aria-hidden="true">/</span>
+            <span>National wind</span>
+            <span className="text-line-strong" aria-hidden="true">/</span>
+            <span>January 2026 decisions</span>
+            <span className="text-line-strong" aria-hidden="true">/</span>
+            <span>31 delivery days</span>
+            <span className="text-line-strong" aria-hidden="true">/</span>
+            <span>224 forecast vintages</span>
+            <span className="ml-auto hidden text-accent/80 sm:inline">publishTime &le; cutoff — zero lookahead</span>
+          </div>
+        </div>
       </header>
 
-      {/* Main Content View */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'decision' && <DecisionView />}
-        {activeTab === 'accuracy' && <AccuracyView />}
-        {activeTab === 'explorer' && <VintageExplorer />}
-        {activeTab === 'about' && <AboutView />}
+      {/* Main view */}
+      <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div key={activeTab} className="animate-rise">
+          {activeTab === 'decision' && <DecisionView />}
+          {activeTab === 'accuracy' && <AccuracyView />}
+          {activeTab === 'explorer' && <VintageExplorer />}
+          {activeTab === 'about' && <AboutView />}
+        </div>
       </main>
 
-      {/* Persistent Accessible Footer */}
-      <footer className="bg-surface border-t border-line py-5 text-xs text-ink-muted mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>
-            Source: Elexon BMRS (FUELHH, WINDFOR) · National wind · January 2026 decisions · All times UTC
-          </div>
-          <div className="font-mono text-xs">
-            Zero lookahead bias: <span className="text-accent font-bold">publishTime &le; decision cutoff</span>
-          </div>
+      {/* Footer */}
+      <footer className="border-t border-line py-5 text-xs text-ink-muted">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center justify-between gap-2 px-4 sm:flex-row sm:px-6 lg:px-8">
+          <p>Source: Elexon BMRS (FUELHH, WINDFOR) · National wind · January 2026 decisions · All times UTC</p>
+          <p className="font-mono text-[11px]">
+            Zero lookahead bias: <span className="font-semibold text-accent">publishTime &le; decision cutoff</span>
+          </p>
         </div>
       </footer>
     </div>

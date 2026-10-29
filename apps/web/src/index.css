@@ -1,6 +1,7 @@
 @import '@fontsource/ibm-plex-sans/400.css';
 @import '@fontsource/ibm-plex-sans/500.css';
 @import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
 @import '@fontsource/ibm-plex-mono/600.css';
@@ -10,20 +11,150 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-accent/20;
+  html {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
     min-height: 100vh;
   }
 
-  /* Professional tabular figures for data & timestamps */
+  /* Ambient terminal backdrop: faint grid + a cold cyan glow at the top. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 340px at 50% -120px, rgba(34, 211, 238, 0.14), transparent 70%),
+      radial-gradient(700px 300px at 88% -80px, rgba(56, 189, 248, 0.08), transparent 70%),
+      linear-gradient(rgba(29, 42, 68, 0.28) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29, 42, 68, 0.28) 1px, transparent 1px);
+    background-size: auto, auto, 44px 44px, 44px 44px;
+    mask-image: linear-gradient(to bottom, black 0%, black 42%, transparent 78%);
+  }
+
+  ::selection {
+    background: rgba(34, 211, 238, 0.32);
+    color: #f8fafc;
+  }
+
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  /* Visible, consistent keyboard focus everywhere. */
+  :focus-visible {
+    outline: 2px solid #22d3ee;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Dark scrollbars for scrollable tables. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2c3d61 transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #2c3d61;
+    border-radius: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Native selects and range inputs on dark surfaces. */
+  select {
+    color-scheme: dark;
+  }
+  select option {
+    background-color: #0c1322;
+    color: #e6edf7;
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #22d3ee var(--fill, 0%), #1d2a44 var(--fill, 0%));
+    outline-offset: 4px;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #e6edf7;
+    border: 3px solid #22d3ee;
+    box-shadow: 0 0 14px rgba(34, 211, 238, 0.6);
+    cursor: pointer;
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #e6edf7;
+    border: 3px solid #22d3ee;
+    box-shadow: 0 0 14px rgba(34, 211, 238, 0.6);
+    cursor: pointer;
+  }
+
+  /* Recharts dark-theme defaults. */
+  .recharts-cartesian-axis-tick text {
+    fill: #93a3bd;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .recharts-cartesian-axis line {
+    stroke: #1d2a44;
+  }
+  .recharts-tooltip-cursor {
+    stroke: #2c3d61;
+  }
 }
 
-/* Reduced motion preference */
+@layer utilities {
+  /* Skeleton shimmer for loading states. */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #101a2f 25%,
+      #152238 50%,
+      #101a2f 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+
+  /* Hairline gradient edge for hero panels. */
+  .edge-glow {
+    position: relative;
+  }
+  .edge-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    border-radius: 14px 14px 0 0;
+    background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.65), transparent);
+    pointer-events: none;
+  }
+}
+
+/* Respect reduced motion: no ambient animation, instant state changes. */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
